@@ -1,7 +1,9 @@
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -13,25 +15,29 @@ public class NotificationTest {
     @BeforeAll
     static void beforeAll() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+        Configuration.timeout = 10000;
+        Configuration.pageLoadStrategy = "eager";
     }
 
     @Test
+    @Tag("search")
     void searchTest() {
 
         step("Открываем сайт", () -> {
-            open("https://spb.hh.ru/")
+            open("https://spb.hh.ru/");
         });
 
         step("Вводим в строку поиска вакансий тестовые данные", () -> {
-            $("#a11y-search-input").setValue("selenide").pressEnter();
+            $("[data-qa='search-input']").setValue("selenide").pressEnter();
         });
 
         step("Проверяем наличие предложения о подписке на результат поиска", () -> {
-            $("#vacancy-serp-subscription").shouldBe(Condition.visible);
+            $("[data-qa='autosearch-subscribe__form']").shouldBe(Condition.visible);
         });
     }
 
     @Test
+    @Tag("login")
     void alternativeLoginOptionsTest() {
 
         step("Открываем сайт", () -> {
@@ -41,7 +47,7 @@ public class NotificationTest {
         step("Переходим на страницу авторизации", () -> {
             $("[data-qa='login']").click();
         });
-        
+
         step("Проверяем, что есть кнопки авторизации через сторонние ресурсы", () -> {
             $(".account-login-social-icons").should(Condition.visible);
         });
