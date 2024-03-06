@@ -92,6 +92,8 @@ public class DemonstrationTests extends TestBase {
         step("Проверяем, что авторизация прошла успешно", () -> {
             authorizationPage.successfulAuthorizationCheck();
         });
+
+        Files.delete(propsPath);
     }
 }
 
